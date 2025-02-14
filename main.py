@@ -89,3 +89,27 @@ plt.show()
 class DigitRecognizerApp:
     def __init__(self, master):
         self.master = master
+        self.master.title("Digit Recognizer")
+
+        # Create the drawing Surface
+        self.canvas = tk.Canvas(master, width=280, height=280, bg="white")
+        self.canvas.pack()
+        self.canvas.bind("<B1-Motion>", self.draw)  # Enables drawing with mouse
+
+        # Buttons for the tkinter window
+        self.predict_button = tk.Button(master, text="Predict", command=self.predict_digit)
+        self.predict_button.pack(pady=5)
+
+        self.clear_button = tk.Button(master, text="Clear", command=self.clear_canvas)
+        self.clear_button.pack(pady=5)
+
+        # Image to store the drawing
+        self.image = Image.new("L", (28, 28), color=0)
+        self.draw_image = ImageDraw.Draw(self.image)
+
+
+    def draw(self, event):
+        x, y = event.x, event.y
+        radius = 10     # Brush Size
+        self.canvas.create_oval(x-radius, y-radius, x+radius, y+radius, fill="black", outline="black")
+        self.draw_image.ellipse([x//10, y//10, x//10+1, y//10+1], fill=255)     # Scale down for model input
